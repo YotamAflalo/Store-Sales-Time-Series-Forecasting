@@ -22,4 +22,12 @@ def holiday_merger(df,national,regional,local,events,work_day):
     df = pd.merge(df,work_day[["date", "type"]].rename({"type":"IsWorkDay"}, axis = 1),how = "left")
     df = pd.merge(df, events, how = "left")
     print("length affter: ",len(df))
+    df["holiday_national_binary"] = np.where(df.holiday_national.notnull(), 1, 0)
+    df["holiday_local_binary"] = np.where(df.holiday_local.notnull(), 1, 0)
+    df["holiday_regional_binary"] = np.where(df.holiday_regional.notnull(), 1, 0)
+
+    df["national_independence"] = np.where(df.holiday_national.isin(['Batalla de Pichincha',  'Independencia de Cuenca', 'Independencia de Guayaquil', 'Independencia de Guayaquil', 'Primer Grito de Independencia']), 1, 0)
+    df["local_cantonizacio"] = np.where(df.holiday_local.str.contains("Cantonizacio"), 1, 0)
+    df["local_fundacion"] = np.where(df.holiday_local.str.contains("Fundacion"), 1, 0)
+    df["local_independencia"] = np.where(df.holiday_local.str.contains("Independencia"), 1, 0)
     return df
